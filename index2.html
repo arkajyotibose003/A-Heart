@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="/logo14.jpg" type="image/x-icon">
+    <title>Happy Valentine💌</title>
+    <style>
+        body {
+            margin: 0;
+            height: 300vh;
+            background: #ffeef3;
+            position: relative;
+        }
+
+        /* ❤️ Heart */
+        .heart {
+            position: absolute;
+            width: 50px;
+            height: 40px;
+            background: #ff4d6d;
+
+            transform: rotate(-45deg);
+            animation: beat 1.2s infinite;
+        }
+
+        .heart::before,
+        .heart::after {
+            content: "";
+            position: absolute;
+            width: 50px;
+            height: 40px;
+            background: #ff4d6d;
+            border-radius: 50%;
+        }
+
+        .heart::before {
+            top: -25px;
+            left: 0;
+        }
+
+        .heart::after {
+            left: 25px;
+            top: 0;
+        }
+
+        /* 💓 Heart beat */
+        @keyframes beat {
+
+            0%,
+            100% {
+                transform: rotate(-45deg) scale(1);
+            }
+
+            50% {
+                transform: rotate(-45deg) scale(1.1);
+            }
+        }
+
+        .h1 {
+            top: 20vh;
+            left: 40vw;
+        }
+
+        .h2 {
+            top: 20vh;
+            left: 60vw;
+        }
+
+        .h3 {
+            top: 40vh;
+            left: 20vw;
+        }
+
+        .eyes {
+            position: absolute;
+            height: 20vh;
+            width: 40vw;
+            top: 30vh;
+            left: 30vw;
+            border: 0.5px solid pink;
+            border-radius: 10px;
+        }
+
+        .h4 {
+            top: 40vh;
+            left: 80vw;
+        }
+
+        .h5 {
+            top: 60vh;
+            left: 40vw;
+        }
+
+        .h6 {
+            top: 60vh;
+            left: 60vw;
+        }
+
+        /* Cssforletter */
+        .page {
+            position: absolute;
+            top: 90vh;
+            left: 30vw;
+        }
+
+        .scroll-container {
+            position: relative;
+            cursor: pointer;
+        }
+
+        /* Ribbon */
+        .ribbon {
+            position: absolute;
+            width: 10vw;
+            height: 20px;
+            background: darkred;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 5;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 30px;
+            font-weight: 700;
+            color: beige;
+        }
+
+        /* Scroll body */
+        .scroll {
+            width: 40vw;
+            height: 40px;
+            background: #fdf1c7;
+            border-radius: 30px;
+            overflow: hidden;
+            transition: height 1s ease;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Open state */
+        .scroll-container.open .scroll {
+            height: 70vh;
+        }
+
+        /* Hide ribbon when open */
+        .scroll-container.open .ribbon {
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+
+        /* Letter content */
+        .letter {
+            opacity: 0;
+            padding: 30px;
+            transition: opacity 0.6s ease 0.4s;
+        }
+
+        /* Show letter */
+        .scroll-container.open .letter {
+            opacity: 1;
+        }
+
+        /* Paper edges */
+        .scroll::before,
+        .scroll::after {
+            content: "";
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background: #e2c98b;
+            border-radius: 50%;
+            top: 0;
+        }
+
+        .scroll::before {
+            left: -20px;
+        }
+
+        .scroll::after {
+            right: -20px;
+        }
+
+        /* Gift Wrapper */
+        .gift-wrapper {
+            position: absolute;
+            top: 180vh;
+            left: 50vw;
+            transform: translateX(-50%);
+        }
+
+        /* 🎁 Gift box base */
+        .gift-box {
+            position: relative;
+            width: 15vw;
+            height: 15vw;
+            cursor: pointer;
+        }
+
+        /* 📦 Box body */
+        .box {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 70%;
+            background: #ff7aa2;
+            border-radius: 2vh;
+            z-index: 1;
+        }
+
+        /* 🎀 Lid */
+        .lid {
+            position: absolute;
+            top: 0;
+            width: 100%;
+            height: 35%;
+            background: #ff4d6d;
+            border-radius: 2vh;
+            transform-origin: top;
+            transition: transform 0.8s ease;
+            z-index: 3;
+        }
+
+        /* 🎉 Items inside */
+        .items {
+            position: absolute;
+            bottom: 20%;
+            width: 100%;
+            display: flex;
+            justify-content: space-evenly;
+            opacity: 0;
+            transform: translateY(5vh);
+            transition: all 0.8s ease;
+            z-index: 2;
+        }
+
+        .items span {
+            font-size: 3vw;
+        }
+
+        /* 🪄 Open state */
+        .gift-box.open .lid {
+            transform: rotateX(140deg);
+        }
+
+        .gift-box.open .items {
+            opacity: 1;
+            transform: translateY(-4vh);
+        }
+
+        .timer {
+            position: absolute;
+            height: 4vh;
+            width: 2vw;
+            border: 1px solid darkred;
+            border-radius: 10px;
+            background-color: grey;
+            padding: 50px;
+            bottom: 68vh;
+            left: 45.5vw;
+            font-size: 80px;
+            font-weight: 900;
+            font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    </style>
+</head>
+
+<body>
+    <audio src="/Dooron Dooron (PenduJatt.Com.Se).mp3" autoplay loop></audio>
+    <div class="thecore">
+        <div class="heart h1"> </div>
+        <div class="heart h2"> </div>
+        <div class="heart h3"></div>
+        <img src="/Protected/WhatsApp Image 2026-01-29 at 15.48.00.jpeg" alt="" class="eyes">
+        <div class="heart h4"></div>
+        <div class="heart h5"></div>
+        <div class="heart h6"></div>
+    </div>
+    <div class="page">
+        <div class="scroll-container" onclick="toggleScroll()">
+            <div class="ribbon">Open Me</div>
+            <div class="scroll">
+                <div class="letter">
+                    <h2>প্রিয় বুবু ❤️</h2><br>
+                    <p>
+                        এটি আপনার জন্য একটি ছোট ওয়েবসাইট, হ্যাঁ হয়তো ভুলত্রুটিতে ভরা, কিন্তু আমার হৃদয়ের গভীর থেকে
+                        তৈরি। <br><br>
+                        আমার বিশৃঙ্খলার মধ্যে শান্তি হয়ে থাকার জন্য, আমার সাদাকালো জগতে রঙ হয়ে আসার জন্য আপনাকে ধন্যবাদ।
+                        এই প্রথমবার আমি আমার অনুভূতির মধ্যে শান্তি অনুভব করেছি। আমার হৃদয় এবং আমার পৃথিবী হওয়ার জন্য
+                        আপনাকে ধন্যবাদ। ধন্যবাদ আমার ভালোবাসা 😌❣️🧿।<br><br>
+                        — পুটু থেকে
+                    </p>
+                    <audio src="/Protected/WhatsApp Audio 2026-01-23 at 11.41.33.ogg" controls>hehe</audio>
+                    <h4>And also thank you for this 😉❣️🧿.</h4>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="gift-wrapper">
+        <div class="gift-box" onclick="openGift(); countdown();">
+            <div class="lid"></div>
+            <div class="box"></div>
+
+            <div class="items">
+                <span>🎀</span>
+            </div>
+        </div>
+    </div>
+    <div class="timer">30</div>
+
+
+    <script>
+        function toggleScroll() {
+            document.querySelector('.scroll-container')
+                .classList.toggle('open');
+        }
+
+        function openGift() {
+            document.querySelector(".gift-box")
+                .classList.toggle("open");
+        }
+        function countdown() {
+            let timeLeft = 30; // seconds
+            const countdownDiv = document.querySelector(".timer");
+
+            countdownDiv.innerText = timeLeft;
+
+            const timer = setInterval(() => {
+                timeLeft--;
+                countdownDiv.innerText = timeLeft;
+
+                if(timeLeft == 0){
+                    clearInterval(timer);
+                    window.location.href = "page3";
+                }
+
+            }, 1000);
+        }
+    </script>
+</body>
+
+</html>

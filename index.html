@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="/logo14.jpg" type="image/x-icon">
+    <title>Happy Valentine💌</title>
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            /* background: #ffeef3; */
+            background-image: url(/ds4bgpg1.png);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: "Comic Sans MS", cursive;
+        }
+
+        .scene {
+            position: relative;
+            width: 80vw;
+            height: 100vh;
+        }
+
+        /* Clouds */
+        /*TEST*/
+        .cloud::before,
+        .cloud::after {
+            content: "";
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            z-index: -1;
+        }
+
+        /* left top bubble */
+        .cloud::before {
+            width: 26px;
+            height: 26px;
+            top: -10px;
+            left: 12px;
+        }
+
+        /* right top bubble */
+        .cloud::after {
+            width: 2vw;
+            height: 5vh;
+            top: 18px;
+            right: 10px;
+        }
+
+        /*TEST end*/
+        .cloud {
+            position: absolute;
+            /* background: white; */
+            background-image: url(/cloudds1.png);
+            padding: 10px 16px;
+            border-radius: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .c1 {
+            top: 12vh;
+            left: 10vw;
+        }
+
+        .c2 {
+            top: 18vh;
+            right: 10vw;
+            animation-delay: 1s;
+        }
+
+        .c3 {
+            bottom: 12vh;
+            left: 18vw;
+            animation-delay: 2s;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-8px);
+            }
+        }
+
+        /* Bubu */
+        .bubu {
+            position: absolute;
+            right: -20px;
+            bottom: 0;
+            width: 160px;
+        }
+
+        /* Envelope */
+        .envelope {
+            position: absolute;
+            bottom: 30vh;
+            left: 50%;
+            border-radius: 10px;
+            transform: translateX(-50%);
+            width: 30vw;
+            height: 40vh;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+        }
+
+        .env-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            /* background: #ffc0cb; */
+            background-image: url(/backenvds2.png);
+            border-radius: 6px;
+            z-index: 1;
+        }
+
+        .env-front {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 70%;
+            /* background: #ffb6c1; */
+            background-image: url(/frontenvds2.png);
+            border-radius: 0 0 6px 6px;
+            z-index: 3;
+        }
+
+        .env-flap {
+            position: absolute;
+            overflow: hidden;
+            top: 0;
+            width: 100%;
+            height: 20vh;
+            /* background: #ff9eb5; */
+            background-image: url(/envflipds2.png);
+            clip-path: polygon(0 0, 50% 100%, 100% 0);
+            transform-origin: top;
+            transition: transform 0.6s;
+            z-index: 4;
+        }
+
+        /* Letter */
+        .letter {
+            position: absolute;
+            bottom: 5%;
+            left: 5%;
+            /* transform: translateX(50%); */
+            width: 90%;
+            height: 0;
+            background: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            transition: height 0.9s ease;
+            z-index: 2;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            /* background: red !important; */
+        }
+
+        .letter p {
+            padding: 20px;
+            text-align: left;
+            font-size: 0.8rem;
+            line-height: 1.5;
+        }
+
+        .readmore {
+            height: 1vh;
+            padding: 20px;
+            background-color: beige;
+            display: flex;
+            justify-content: left;
+            align-items: center;
+        }
+
+        .readmore p {
+            height: 20%;
+            color: red;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+        }
+        .next{
+            height: 5vh;
+            width: 3vw;
+            padding-left: 85%;
+        }
+        .click{
+            padding-left: 85%;
+            color: palevioletred;
+            padding-bottom: 1vh;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="scene">
+
+        <!-- Chat Clouds -->
+        <div class="cloud c1">ও ম্যাডাম সানচু👀❤️</div>
+        <div class="cloud c2">খুলে দেখু সোনটাই💌</div>
+        <div class="cloud c3">তোমার জোন কিচু আছি✨💖🧿</div>
+
+        <!-- Bubu Sticker -->
+        <img src="/ChatGPT Image Jan 28, 2026, 09_55_53 PM.png" class="bubu" />
+
+        <!-- Envelope -->
+        <div class="envelope" onclick="openLetter()">
+            <div class="env-back"></div>
+            <div class="letter">
+                <div class="readmore" onclick="rdfull()">
+                    <p>আরো পড়ুন</p>
+                </div>
+                <p>
+                    প্রিয়তম,<br><br>
+
+                    আমাদের দেখা হওয়ার পর অনেক দিন হয়ে গেল। ছয় মাস হয়ে গেল যখন আমি জানতে পারলাম যে, আমার হৃদয় যার জন্য
+                    আকুল, সেও আমার জন্য একই রকম অনুভব করে 🧿❤️। তোমার উপস্থিতিতে আমার আত্মা যে শান্তি পায়, তা ভাষায়
+                    প্রকাশ করা যায় না। জীবনে প্রথমবারের মতো আমি জীবনের রঙ অনুভব করেছি। তোমার সাথে নীরবতাও আমার কাছে মধুর
+                    সঙ্গীতের মতো মনে হয়। আমি আমার জীবনের প্রতিটি মুহূর্ত তোমার সাথে কাটাতে ভালোবাসি ❤️।<br>
+                    তাহলে আমার প্রিয় সোনটাই, তুমি কি আমার ভ্যালেন্টাইন হতে প্রস্তুত 🧿❤️?<br><br>
+
+                    তোমার দুদু।<br>
+                    <img src="/black-and-white-fingerprint-logo-vector.jpg" alt="" class="next" onclick="nxtpg()">
+                    <span class="click">Click Me</span>
+                </p>
+
+            </div>
+            <div class="env-front"></div>
+            <div class="env-flap"></div>
+        </div>
+
+    </div>
+
+    <script>
+        let opened = false;
+
+        function openLetter() {
+            if (opened) return;
+
+            document.querySelector(".letter").style.height = "53vh";
+            document.querySelector(".env-flap").style.zIndex = "1";
+            document.querySelector(".env-flap").style.transform = "rotateX(180deg)";
+            opened = true;
+        }
+        function rdfull() {
+            document.querySelector(".letter").style.zIndex = "6"
+        }
+        function nxtpg(){
+            window.location.href = "page2"; 
+        }
+    </script>
+</body>
+
+</html>

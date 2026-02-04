@@ -1,0 +1,3 @@
+# Ignore protected images
+assests/protected/
+node_modules

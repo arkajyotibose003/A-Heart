@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" href="/logo14.jpg" type="image/x-icon">
+    <title>Happy Valentine💌</title>
+    <style>
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background-color: #D81B60;
+            /* background: radial-gradient(circle at top, #1a1a1a, #0e0e0e); */
+            font-family: Arial, sans-serif;
+        }
+
+        .room {
+            display: grid;
+            grid-template-columns: 3fr 1fr;
+            gap: 2vh;
+            padding: 2vh;
+            height: 100vh;
+        }
+
+        /* 🎬 MOVIE */
+        .movie-area {
+            background: black;
+            border-radius: 2vh;
+            overflow: hidden;
+            box-shadow: 0 0 60px rgba(255, 77, 109, 0.15);
+        }
+
+        .movie-area video {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        /* 📞 CALL COLUMN */
+        .call-column {
+            display: flex;
+            flex-direction: column;
+            gap: 2vh;
+        }
+
+        /* CALL WINDOWS */
+        .call-window {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(12px);
+            border-radius: 2vh;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #aaa;
+        }
+
+        /* Video feed */
+        .call-window video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Labels */
+        .call-window span {
+            position: absolute;
+            bottom: 1vh;
+            left: 1vh;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 0.4vh 1vh;
+            border-radius: 2vh;
+            font-size: 1.4vh;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="room">
+
+        <!-- 🎬 MOVIE -->
+        <div class="movie-area">
+            <video id="movie" controls>
+                <source src="/Protected/metrofinal.mp4" type="video/mp4">
+                Your browser does not support video.
+            </video>
+        </div>
+
+        <!-- 📞 VIDEO CALL SIDE -->
+        <div class="call-column">
+            <div class="call-window you">
+                <span>You</span>
+            </div>
+
+            <div class="call-window friend">
+                <span>Friend</span>
+                Waiting for friend…
+            </div>
+        </div>
+
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+
+        let localStream;
+        let peer;
+
+        const youBox = document.querySelector(".you");
+        const friendBox = document.querySelector(".friend");
+
+        // 🎥 GET CAMERA + MIC
+        async function initCamera() {
+            localStream = await navigator.mediaDevices.getUserMedia({
+                video: true,
+                audio: true
+            });
+
+            const video = document.createElement("video");
+            video.srcObject = localStream;
+            video.autoplay = true;
+            video.muted = true; // prevent echo
+            video.playsInline = true;
+
+            youBox.appendChild(video);
+        }
+
+        // 🔗 CREATE PEER
+        function createPeer() {
+            peer = new RTCPeerConnection({
+                iceServers: [
+                    { urls: "stun:stun.l.google.com:19302" }
+                ]
+            });
+
+            // Send our video + audio
+            localStream.getTracks().forEach(track => {
+                peer.addTrack(track, localStream);
+            });
+
+            // Receive friend's stream
+            peer.ontrack = e => {
+                friendBox.innerHTML = "<span>Friend</span>";
+
+                const video = document.createElement("video");
+                video.srcObject = e.streams[0];
+                video.autoplay = true;
+                video.playsInline = true;
+
+                friendBox.appendChild(video);
+            };
+
+            // ICE
+            peer.onicecandidate = e => {
+                if (e.candidate) {
+                    socket.emit("ice-candidate", e.candidate);
+                }
+            };
+        }
+
+        // 📞 START CALL
+        async function startCall() {
+            await initCamera();
+            createPeer();
+
+            const offer = await peer.createOffer();
+            await peer.setLocalDescription(offer);
+
+            socket.emit("offer", offer);
+        }
+
+        // 📩 RECEIVE OFFER
+        socket.on("offer", async offer => {
+            await initCamera();
+            createPeer();
+
+            await peer.setRemoteDescription(offer);
+            const answer = await peer.createAnswer();
+            await peer.setLocalDescription(answer);
+
+            socket.emit("answer", answer);
+        });
+
+        // ✅ RECEIVE ANSWER
+        socket.on("answer", async answer => {
+            await peer.setRemoteDescription(answer);
+        });
+
+        // 🌐 ICE
+        socket.on("ice-candidate", candidate => {
+            peer.addIceCandidate(candidate);
+        });
+
+        // 🔁 AUTO START
+        startCall();
+
+        const movie = document.getElementById("movie");
+
+        let isSyncing = false;
+
+        // ▶️ PLAY
+        movie.addEventListener("play", () => {
+            if (isSyncing) return;
+            socket.emit("movie-play");
+        });
+
+        // ⏸️ PAUSE
+        movie.addEventListener("pause", () => {
+            if (isSyncing) return;
+            socket.emit("movie-pause");
+        });
+
+        // ⏩ SEEK
+        movie.addEventListener("seeked", () => {
+            if (isSyncing) return;
+            socket.emit("movie-seek", movie.currentTime);
+        });
+
+        // 🔁 RECEIVE SYNC EVENTS
+        socket.on("movie-play", () => {
+            isSyncing = true;
+            movie.play();
+            isSyncing = false;
+        });
+
+        socket.on("movie-pause", () => {
+            isSyncing = true;
+            movie.pause();
+            isSyncing = false;
+        });
+
+        socket.on("movie-seek", time => {
+            isSyncing = true;
+            movie.currentTime = time;
+            isSyncing = false;
+        });
+
+    </script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="/logo14.jpg" type="image/x-icon">
+    <title>Happy Valentine💌</title>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playwrite+NZ+Basic:wght@100..400&family=Roboto+Slab:wght@100..900&display=swap');
+
+        body {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #F6C1CC;
+        }
+
+        .ticket {
+            display: flex;
+            flex-direction: row;
+            border-radius: 10px;
+            box-shadow:
+                -6px -6px 12px rgba(255, 255, 255, 0.08),
+                /* light */
+                6px 6px 16px rgba(0, 0, 0, 0.6);
+            background-color: white;
+            overflow: hidden;
+        }
+
+        .show {
+            height: 40vh;
+            width: 13vw;
+            border-right: 2px solid;
+            display: flex;
+            justify-content: end;
+            align-items: end;
+            overflow: hidden;
+        }
+
+        .mainbox {
+            height: 40vh;
+            width: 30vw;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: #D81B60;
+        }
+
+        .cred {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 5px;
+        }
+
+        .head {
+            padding-bottom: 7.5vh;
+        }
+
+        .head h1 {
+            margin: 0;
+            color: white;
+        }
+
+        .set {
+            display: flex;
+            flex-direction: column;
+            height: 5vh;
+            width: 10vw;
+            padding: 7px;
+            gap: 2px;
+        }
+
+        #sub {
+            margin-top: 10px;
+            background-color: #36454F;
+            width: 6vw;
+            border-radius: 10px;
+            font-family: "Roboto Slab", serif;
+            box-shadow:
+                -6px -6px 12px rgba(255, 255, 255, 0.08),
+                /* light */
+                6px 6px 16px rgba(0, 0, 0, 0.6);
+            color: #D4AF37 ;
+        }
+
+        .set p {
+            margin: 0;
+        }
+
+        .show img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .set p {
+            font-family: "Playwrite NZ Basic", cursive;
+            font-size: 12px;
+            color: #D4AF37 ;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="ticket">
+        <div class="show">
+            <img src="/show14home.jpg" alt="" class="display">
+        </div>
+        <div class="mainbox">
+            <div class="head">
+                <h1>Enter Passcode To Enter</h1>
+            </div>
+            <div class="cred">
+                <div class="set">
+                    <p>Enter our special date</p>
+                    <input type="date" class="int" id="dt">
+                </div>
+                <div class="set">
+                    <p>Enter our date spot</p>
+                    <input type="text" class="int" id="pl">
+                </div>
+            </div>
+            <button class="int" id="sub">Enter</button>
+        </div>
+    </div>
+
+    <script>
+        const date = document.getElementById("dt");
+        const place = document.getElementById("pl");
+        const submit = document.getElementById("sub");
+
+        submit.addEventListener('click',()=>{
+            const dateval = date.value;
+            const placeval = place.value;
+            setTimeout(() => {
+                if(dateval == "2025-07-23" && placeval == "Maidan"){
+                    window.location.href="page1";
+                }
+            },2000);
+        });
+    </script>
+
+</body>
+
+</html>
