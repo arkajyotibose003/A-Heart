@@ -104,7 +104,7 @@
         }
 
         function createPeer() {
-            const pc = new RTCPeerConnection({
+            const peer = new RTCPeerConnection({
                 iceServers: [
                     {
                         urls: "stun:stun.l.google.com:19302"
@@ -112,7 +112,7 @@
                     {
                         urls: "turn:global.relay.metered.ca:80",
                         username: "04cc5e3a74f11d96bbc42d95",
-                        credential: "qYqrQM+ezWW++4Hi	"
+                        credential: "qYqrQM+ezWW++4Hi"
                     }
                 ]
             });
@@ -145,11 +145,15 @@
             socket.emit("offer", offer);
         }
 
+        let cameraReady = false;
+
         socket.on("user-count", async count => {
-            if (count === 1) {
+            if (!cameraReady) {
                 await initCamera();
+                cameraReady = true;
             }
-            if (count === 2) {
+
+            if (count === 2 && !peer) {
                 startCall();
             }
         });
