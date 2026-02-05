@@ -35,7 +35,8 @@ io.on("connection", socket => {
   users++;
   console.log("User connected:", socket.id, "Total:", users);
 
-  io.emit("user-count", users);
+  socket.emit("you-are", users);
+
 
   socket.on("offer", offer => {
     socket.broadcast.emit("offer", offer);

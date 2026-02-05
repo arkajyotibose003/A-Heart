@@ -139,10 +139,11 @@ function createPeer() {
 }
 
 // ---- CALL LOGIC ----
-socket.on("user-count", async count => {
+socket.on("you-are", async number => {
     await initCamera();
 
-    if (count === 2 && !peer) {
+    // ONLY second user creates offer
+    if (number === 2) {
         createPeer();
         const offer = await peer.createOffer();
         await peer.setLocalDescription(offer);
