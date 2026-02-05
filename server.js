@@ -9,7 +9,19 @@ const port = process.env.PORT || 10000;
 app.use(express.static("assests"));
 
 app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "frontpage.html"));
+});
+
+app.get("/page1", (req, res) => {
   res.sendFile(path.join(__dirname, "index.html"));
+});
+
+app.get("/page2", (req, res) => {
+  res.sendFile(path.join(__dirname, "index2.html"));
+});
+
+app.get("/page3", (req, res) => {
+  res.sendFile(path.join(__dirname, "index3.html"));
 });
 
 const server = http.createServer(app);
