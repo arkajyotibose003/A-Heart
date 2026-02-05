@@ -3,8 +3,8 @@
 
 <head>
     <meta charset="UTF-8">
+    <title>Watch Together 💌</title>
     <link rel="icon" href="/logo14.jpg">
-    <title>Happy Valentine 💌</title>
 
     <style>
         body {
@@ -42,7 +42,7 @@
 
         .call-window {
             flex: 1;
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.15);
             border-radius: 2vh;
             position: relative;
             overflow: hidden;
@@ -52,162 +52,153 @@
             position: absolute;
             bottom: 1vh;
             left: 1vh;
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(0,0,0,0.6);
             padding: 4px 10px;
             border-radius: 12px;
             color: white;
             font-size: 12px;
+            z-index: 10;
         }
     </style>
 </head>
 
 <body>
 
-    <div class="room">
-        <div class="movie-area">
-            <video id="movie" controls>
-                <source src="/Protected/finalmetromovie--2.mp4" type="video/mp4">
-            </video>
-        </div>
-
-        <div class="call-column">
-            <div class="call-window you"><span>You</span></div>
-            <div class="call-window friend"><span>Friend</span></div>
-        </div>
+<div class="room">
+    <div class="movie-area">
+        <video id="movie" controls>
+            <source src="/Protected/finalmetromovie--2.mp4" type="video/mp4">
+        </video>
     </div>
 
-    <script src="/socket.io/socket.io.js"></script>
-    <script>
-        const socket = io();
+    <div class="call-column">
+        <div class="call-window you"><span>You</span></div>
+        <div class="call-window friend"><span>Friend</span></div>
+    </div>
+</div>
 
-        let localStream;
-        let peer;
-        let isSyncing = false;
+<script src="/socket.io/socket.io.js"></script>
+<script>
+const socket = io();
 
-        const youBox = document.querySelector(".you");
-        const friendBox = document.querySelector(".friend");
-        const movie = document.getElementById("movie");
+let localStream;
+let peer;
+let cameraReady = false;
+let isSyncing = false;
 
-        async function initCamera() {
-            localStream = await navigator.mediaDevices.getUserMedia({
-                video: true,
-                audio: true
-            });
+const youBox = document.querySelector(".you");
+const friendBox = document.querySelector(".friend");
+const movie = document.getElementById("movie");
 
-            const video = document.createElement("video");
-            video.srcObject = localStream;
-            video.autoplay = true;
-            video.muted = true;
-            video.playsInline = true;
+async function initCamera() {
+    if (cameraReady) return;
 
-            youBox.appendChild(video);
-        }
+    localStream = await navigator.mediaDevices.getUserMedia({
+        video: true,
+        audio: true
+    });
 
-        function createPeer() {
-            const peer = new RTCPeerConnection({
-                iceServers: [
-                    {
-                        urls: "stun:stun.l.google.com:19302"
-                    },
-                    {
-                        urls: "turn:global.relay.metered.ca:80",
-                        username: "04cc5e3a74f11d96bbc42d95",
-                        credential: "qYqrQM+ezWW++4Hi"
-                    }
-                ]
-            });
+    const video = document.createElement("video");
+    video.srcObject = localStream;
+    video.autoplay = true;
+    video.muted = true;
+    video.playsInline = true;
 
+    youBox.appendChild(video);
+    cameraReady = true;
+}
 
-            localStream.getTracks().forEach(track =>
-                peer.addTrack(track, localStream)
-            );
-
-            peer.ontrack = e => {
-                friendBox.innerHTML = "<span>Friend</span>";
-                const video = document.createElement("video");
-                video.srcObject = e.streams[0];
-                video.autoplay = true;
-                video.playsInline = true;
-                friendBox.appendChild(video);
-            };
-
-            peer.onicecandidate = e => {
-                if (e.candidate) socket.emit("ice-candidate", e.candidate);
-            };
-        }
-
-        async function startCall() {
-            await initCamera();
-            createPeer();
-
-            const offer = await peer.createOffer();
-            await peer.setLocalDescription(offer);
-            socket.emit("offer", offer);
-        }
-
-        let cameraReady = false;
-
-        socket.on("user-count", async count => {
-            if (!cameraReady) {
-                await initCamera();
-                cameraReady = true;
+function createPeer() {
+    peer = new RTCPeerConnection({
+        iceServers: [
+            { urls: "stun:stun.l.google.com:19302" },
+            {
+                urls: "turn:global.relay.metered.ca:80",
+                username: "04cc5e3a74f11d96bbc42d95",
+                credential: "qYqrQM+ezWW++4Hi"
             }
+        ]
+    });
 
-            if (count === 2 && !peer) {
-                startCall();
-            }
-        });
+    localStream.getTracks().forEach(track =>
+        peer.addTrack(track, localStream)
+    );
 
-        socket.on("offer", async offer => {
-            await initCamera();
-            createPeer();
-            await peer.setRemoteDescription(offer);
+    peer.ontrack = e => {
+        friendBox.innerHTML = "<span>Friend</span>";
+        const video = document.createElement("video");
+        video.srcObject = e.streams[0];
+        video.autoplay = true;
+        video.playsInline = true;
+        friendBox.appendChild(video);
+    };
 
-            const answer = await peer.createAnswer();
-            await peer.setLocalDescription(answer);
-            socket.emit("answer", answer);
-        });
+    peer.onicecandidate = e => {
+        if (e.candidate) socket.emit("ice-candidate", e.candidate);
+    };
+}
 
-        socket.on("answer", answer => {
-            peer.setRemoteDescription(answer);
-        });
+// ---- CALL LOGIC ----
+socket.on("user-count", async count => {
+    await initCamera();
 
-        socket.on("ice-candidate", candidate => {
-            peer.addIceCandidate(candidate);
-        });
+    if (count === 2 && !peer) {
+        createPeer();
+        const offer = await peer.createOffer();
+        await peer.setLocalDescription(offer);
+        socket.emit("offer", offer);
+    }
+});
 
-        // 🎬 MOVIE SYNC
-        movie.addEventListener("play", () => {
-            if (!isSyncing) socket.emit("movie-play");
-        });
+socket.on("offer", async offer => {
+    await initCamera();
+    createPeer();
+    await peer.setRemoteDescription(offer);
 
-        movie.addEventListener("pause", () => {
-            if (!isSyncing) socket.emit("movie-pause");
-        });
+    const answer = await peer.createAnswer();
+    await peer.setLocalDescription(answer);
+    socket.emit("answer", answer);
+});
 
-        movie.addEventListener("seeked", () => {
-            if (!isSyncing) socket.emit("movie-seek", movie.currentTime);
-        });
+socket.on("answer", async answer => {
+    await peer.setRemoteDescription(answer);
+});
 
-        socket.on("movie-play", () => {
-            isSyncing = true;
-            movie.play();
-            isSyncing = false;
-        });
+socket.on("ice-candidate", candidate => {
+    if (peer) peer.addIceCandidate(candidate);
+});
 
-        socket.on("movie-pause", () => {
-            isSyncing = true;
-            movie.pause();
-            isSyncing = false;
-        });
+// ---- 🎬 MOVIE SYNC ----
+movie.addEventListener("play", () => {
+    if (!isSyncing) socket.emit("movie-play");
+});
 
-        socket.on("movie-seek", time => {
-            isSyncing = true;
-            movie.currentTime = time;
-            isSyncing = false;
-        });
-    </script>
+movie.addEventListener("pause", () => {
+    if (!isSyncing) socket.emit("movie-pause");
+});
+
+movie.addEventListener("seeked", () => {
+    if (!isSyncing) socket.emit("movie-seek", movie.currentTime);
+});
+
+socket.on("movie-play", () => {
+    isSyncing = true;
+    movie.play();
+    isSyncing = false;
+});
+
+socket.on("movie-pause", () => {
+    isSyncing = true;
+    movie.pause();
+    isSyncing = false;
+});
+
+socket.on("movie-seek", time => {
+    isSyncing = true;
+    movie.currentTime = time;
+    isSyncing = false;
+});
+</script>
 
 </body>
-
 </html>
